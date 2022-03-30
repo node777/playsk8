@@ -1,0 +1,31 @@
+<script>
+async function getAssets(){
+    let r=await fetch(`https://api.opensea.io/api/v1/assets?asset_contract_address=0xa1f11abb5b1874942cf09c96f0536b783e492e7f&owner=${window.ethereum.selectedAddress}`, {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': '29930174fbb94c91bd30a31e79153922'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    });
+    let a=await r.json()
+    play.assets=a.assets
+    console.log(play.assets)
+    let sk8rSelect=``
+    for(asset in play.assets){
+        sk8rSelect+=elements.sk8r(asset)
+    }
+    
+    document.getElementById("info").innerHTML=`
+        Please select your sk8r.
+        <div class="subtle">You currently have x SK8Rs</div>
+        <div id="sk8rSelect">${sk8rSelect}</div>
+    `
+}
+    setTimeout(getAssets,1000);
+</script>

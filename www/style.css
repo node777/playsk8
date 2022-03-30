@@ -1,0 +1,350 @@
+@import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
+
+body{
+    background-color: #010001;
+    color: white;
+    font-family: 'Play', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    overflow-x: hidden;    
+}
+input{
+    font-size: 32px;
+    font-family: 'Play', sans-serif;
+}
+iframe{
+    border: none;
+    width: 20vw;
+    height: 20vw;
+}
+#header{
+    position: fixed;
+    width: 100%;
+    background-color: #010001;
+    cursor: pointer;
+}
+
+#content{
+    width: max-content;
+    max-width: 100%;
+    margin: auto;
+    padding: 128px 32px 64px;
+}
+#footer{
+    width: 100%;
+    text-align: center;
+    color: #474747;
+    font-size: 15px;
+    padding: 16px;
+}
+#address{
+    padding: 36px;    
+    font-size: 20px;
+    font-weight: bold;
+}
+#info{
+    width: 100%;
+    text-align: center;
+}
+#info2{
+    text-align: center;
+}
+#gameBox{
+    background-image: url("assets/blur2.webp");
+    background-size: 100%;
+    border: 1px solid white;
+    padding: 32px;
+}
+#gameHead{
+    width: 100%;
+    text-align: center;
+}
+#logo{
+    width: 155px;
+}
+#headSpinner{
+    width: 45px;
+    height: 36px;
+    margin-top: 20px;
+    float: left;
+}
+#vs{
+    width: 137px;
+    height: 137px;
+}
+#overlay{
+    display: none;
+}
+#sidebar{
+    display: none;
+    top:0;
+    right: 0;
+    width: 30%;
+}
+.red{
+    color:#fe8181;
+}
+.green{
+    color: #81fecd;
+}
+.links{
+    align-items: center;
+    padding: 0 128px;
+    text-align: center;
+    /*max-width: 980px;*/
+    
+    width: max-content;
+    margin: auto;
+    display: flex;
+}
+.links>div{
+    padding: 0 28px;
+}
+.links>div:hover{
+    color: #3c6bac;
+}
+.loader{
+    width: 128px;
+    margin: 32px;
+}
+.button{
+    font-size: 16px;
+    padding: 16px;
+    border-radius: 24px;
+    background-color: #3c6bac;
+    text-decoration: none;
+    user-select: none;
+    cursor: pointer;
+    margin: 32px 0;
+    text-align: center;
+    width: max-content;
+}
+.button.v2{
+    background-color: #010001;
+    color:  #3c6bac;
+    border: 1px solid white;
+    width: initial;
+    
+}
+.button.v2:hover{
+    background-color:  #3c6bac;
+    color: white;
+}
+.icon{
+    width: 32px;
+}
+.info{
+    background-color: #181818;
+    transform: translateY(-100%);
+    padding: 16px;
+    align-items: center;
+    display: flex;
+}
+.info2{
+    background-color: #181818;
+    transform: translateY(-50%);
+    padding: 22px;
+    box-sizing: border-box;
+    width: 280px;
+    border-radius: 8px;
+    text-align: center;
+}
+.infoSq{
+    margin: 0 64% 0 32px;
+}
+.playerControls{
+    width: 72px;
+    align-self: flex-start;
+}
+.playerControls>div{
+    text-align: center;
+    font-size: 12px;
+}
+.playerControls video{
+    width: 72px;
+    border-radius: 8px;
+    margin: 8px 0 0 0;
+}
+.playerControls h3{
+    
+    font-size: 14px;
+    font-weight: bold;
+}
+.statusBar{
+    width: 85%;
+    margin: 8px 0 16px;
+}
+.playerControls .circle, .circle{
+    border-radius: 50%;
+}
+.pfp{
+    width: 50px;    
+    height: 50px;
+    border-radius: 50%;
+}
+#header .pfp{
+    
+    margin: 23px 0;
+}
+.rounded{
+    
+
+    border-radius: 32px;
+}
+.roundedBottom{
+    
+
+    border-radius: 0 0 32px 32px;
+}
+.box{
+    width: 980px;
+    margin: auto;
+    text-align: center;
+}
+.box>img{
+    width: 100%;
+}
+.padding{
+    padding: 32px;
+}
+#leaderboardGif{
+    width: 50%;
+    margin: -104px auto;
+    
+}
+.roundedTop{
+    
+
+    border-radius: 32px 32px 0 0 ;
+}
+.invert{
+    -webkit-filter: invert(100%); /* safari 6.0 - 9.0 */
+    filter: invert(100%);
+      
+}
+.br{
+    background-color: #474747;
+    height: 1px;
+    width: 100%;
+}
+.br.v2{
+    height: 2px;
+    width: 50%;
+    display: none;
+}
+.subtle{
+    color: #474747;
+    font-size: 15px;
+
+}
+.pointer{
+    cursor: pointer;
+}
+.left{text-align: left;}
+.right{text-align: right;
+}
+.floatRight{
+    float: right;
+}
+.inBl{
+    display: inline-block;
+}
+.center{text-align: center;}
+.vCenter{
+    
+    align-items: center;
+}
+.w1{
+    width: 100%;
+}
+.w20{
+    
+    width: 20vw;
+}
+.flex{
+    display: flex;
+}
+.flex>*{
+    flex:1;
+}
+.flex>.button{
+    margin: 16px auto;
+}
+.player{
+    width: min-content;
+    text-align: center;
+}
+.notable{width: 280px;}
+.sk8r{
+    border: 1px solid white;
+    background-image: url("assets/blur.webp");
+    background-size: 140%;
+    padding: 4px;
+    display: inline-block;
+    margin: 32px;
+}
+.topPad{
+    padding-top: 5vw;
+}
+.sk8r>*{
+}
+.sk8rInfo{
+    background-color: #422362;
+    padding: 8px;
+    text-align: center;
+    font-weight: 800;
+}
+.trickInfo{
+    margin: 16px;
+    font-size: 18px;
+}
+.sk8r iframe{
+    width: 12vw;
+    height: 12vw;
+}
+.links{
+    font-size: 16px;
+}
+#sk8rDisplay{
+    width: 40vw;
+    height: 40vw;
+}
+#sk8rSelect{
+    display: flex;
+}
+#sk8rSelect .sk8r{
+    
+    width: 12vw;
+}
+.trickVideo{
+    width: 17vw;
+    float: left;
+    margin: 16px;
+}
+.letters{
+    margin: 0 32px 32px;
+}
+.letters>div{
+    color: #ff7676;
+    color: transparent;
+    font-size: 64px;
+    border-bottom: 1px solid white;
+    margin: 16px;
+    font-weight: bolder;
+    user-select: none;
+}
+div span{
+    padding: 16px;
+    width:100%;
+    height:100%;
+}
+
+h1{
+    margin: 0;
+    font-size: 52px;
+    font-weight: normal;
+}
+@font-face {
+    font-family:st26k;
+    src: url("./St26k.ttf");
+}

@@ -1,0 +1,18 @@
+{
+    "name": "playSK8",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "author": "Sabin Hertz",
+    "license": "ISC",
+    "dependencies": {
+        "ethers": "^5.5.3",
+        "express": "^4.17.1",
+        "firebase-admin": "^10.0.2",
+        "node-fetch": "^3.2.0",
+        "unzipper": "^0.10.11"
+    }
+}

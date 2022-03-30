@@ -1,0 +1,45 @@
+<head>
+    <title>PLAYSK8</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <header id="header">
+        <div class="links">
+            <div onclick="location.hash=''">
+                <img id="headSpinner" src="./assets/spinner.gif" />
+                <img id="logo" src="./assets/playsk8.webp" />
+            </div>
+            <div onclick="location.hash=''">Welcome</div>
+            <div onclick="location.hash='selectSk8r'">Select SK8r</div>
+            <div onclick="location.hash='challenge'">Challenge Players</div>
+            <div onclick="location.hash='games'">Games</div>
+            <div onclick="location.hash='games'">
+                <img class="invert" src="./assets/bell.webp" />
+            </div>
+            <div class="flex" onclick="window.location='https://opensea.io/account'">
+                <img id="userPfp" class="pfp" src="./assets/johnny.webp" />
+                <div id="address"></div>
+            </div>
+        </div>
+        <div class="br"></div>
+    </header>
+    
+    <div id="content">
+    </div>
+    
+    <div class="br"></div>
+    <div id="footer">SK8 LLC | 2022</div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-database.js"></script>
+
+    <script src="./scripts/web3.min.js"></script>
+    <script src="./scripts/bitprint.js"></script>
+    <script src="./scripts/contract.js"></script>
+    <script src="./scripts/elements.js"></script>
+    <script src="./scripts/play.js"></script>
+    <script src="./scripts/lux.js"></script>
+
+</body>
