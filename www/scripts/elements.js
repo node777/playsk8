@@ -187,8 +187,8 @@ let elements={
                             <video class="circle" autoplay loop>
                                     <source id="" type="video/mp4" src="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media">
                             </video>
-                            <h3>@bonezarmy</h3>
-                            0xb2s....
+                            <h3 id="playerUsername">@bonezarmy</h3>
+                            <p id="playerAddress">0xb2s....</p>
                         </div>
                         <div id="p1_tricks"></div>
                     </div>
@@ -204,8 +204,8 @@ let elements={
                         </div>
                         <div class="letters flex">
                             <div id="playerLetter1">S</div>
-                            <div id="playerLetter1">K</div>
-                            <div id="playerLetter1">8</div>
+                            <div id="playerLetter2">K</div>
+                            <div id="playerLetter3">8</div>
                         </div>
                     </div>
                     <img src="assets/vs.gif" id="vs"/>
@@ -237,8 +237,8 @@ let elements={
                             <video class="circle" autoplay loop>
                                     <source type="video/mp4" src="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media">
                             </video>
-                            <h3>@jennyblock</h3>
-                            0xb2s....
+                            <h3 id="rivalUsername">@bonezarmy</h3>
+                            <p id="rivalAddress">0xb2s....</p>
                         </div>
                     </div>
                 </div>

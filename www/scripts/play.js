@@ -141,6 +141,7 @@ let play={
         let gameSnip={
             trick:trick,
             timestamp:Date.now(),
+            sk8r: game.sk8r,
             key:game.key
         }
         let sig= await bitprint.sign(JSON.stringify(gameSnip))
@@ -188,19 +189,50 @@ let play={
         }
     },
     async updateGame(){
-        //getSk8rData
-        let r=await fetch(`/metadata/${game.sk8r}`, {
-            method: 'GET' // *GET, POST, PUT, DELETE, etc.
-        })
-        
-        play.sk8rData=await r.json()
+        //check if user is p1 or p2
+        console.log(window.ethereum)
+        if(window.ethereum.selectedAddress.toLowerCase()==game.p1 || window.ethereum.selectedAddress.toLowerCase()==game.p2){
+            //flip game board if user is p2
+            window.ethereum.selectedAddress.toLowerCase()==game.p2?game.board="flipped":console.log("user is p1")
 
-        play.changeAnimation(game.lastTrick)
-        //let trickSource=`https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${sk8r}_v03/${sk8r}_${Object.keys(play.sk8rData.tricks)[0]}_success.mov?alt=media`
+            document.getElementById("playerAddress").innerHTML=`${game.board=="flipped"?game.p2.substring(0, 5):!game.p1.substring(0, 5)}...`;
+            document.getElementById("rivalAddress").innerHTML=`${game.board=="flipped"?game.p1.substring(0, 5):!game.p2.substring(0, 5)}...`;
+            
+            //check if user has selected sk8r yet
+            if(game.board=="flipped"?!game.p2_sk8r:!game.p1_sk8r){
+                //prompt user to select sk8r
+                alert("please select SK8R")
+                location.hash="sk8rSelect"
+                return
+            }else{
+                game.sk8r=game.board=="flipped"?game.p2_sk8r:game.p1_sk8r
+                game.lastTrick=game.board=="flipped"?!game.p2_lastTrick:!game.p1_lastTrick
+            }
 
-        document.getElementById("p1_tricks").innerHTML=elements.tricks()
+            play.changeAnimation(game.lastTrick)
 
-        console.log(game)
+            //if its your turn
+            if(game.board=="flipped"?game.turn==2:game.turn==1){
+
+                //getSk8rData
+                let r=await fetch(`/metadata/${game.sk8r}`, {
+                    method: 'GET' // *GET, POST, PUT, DELETE, etc.
+                })
+                
+                play.sk8rData=await r.json()
+    
+                //let trickSource=`https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${sk8r}_v03/${sk8r}_${Object.keys(play.sk8rData.tricks)[0]}_success.mov?alt=media`
+    
+                //display tricks
+                document.getElementById('p1_tricks').innerHTML=elements.tricks()
+    
+
+            }
+        }
+        //if user is not in game 
+        else{
+            //do nothing
+        }
     }
 }
 
