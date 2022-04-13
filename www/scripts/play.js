@@ -1,17 +1,15 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyDX0PrbtBoeOj6XMP_BlqeJ9EMptX7XQTQ",
-    authDomain: "playsk8.firebaseapp.com",
-    databaseURL: "https://playsk8-default-rtdb.firebaseio.com",
-    projectId: "playsk8",
-    storageBucket: "playsk8.appspot.com",
-    messagingSenderId: "1033335410277",
-    appId: "1:1033335410277:web:955fd507c941e5a7c1c08c"
-  };
-  
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  var database = firebase.database();
+
 let play={
+    getZeros(asset){
+        asset=asset.toString().length
+        let zeros=5-asset;
+        let zeroString="";
+        for(i=0;i<zeros;i++){
+            zeroString+="0"
+        }
+        return zeroString
+
+    },
     async connectWallet(){
         document.getElementById("content").innerHTML=elements.connectingWallet;
         await contract.connect()
@@ -53,7 +51,7 @@ let play={
             sk8rSelect+=elements.sk8r(asset)
         }
         sk8rSelect+=`
-            <div class="sk8r pointer rounded center topPad" onclick="window.location='https://opensea.io/collection/playsk8-official'">
+            <div class="sk8r pointer rounded center topBottomPad" onclick="window.location='https://opensea.io/collection/playsk8-official'">
                 
                 <h1>+</h1>
                 <h2>Add Sk8r</h2>
@@ -76,20 +74,36 @@ let play={
     },
     async select(sk8r){
         game?"":game={}
-        game.sk8r=play.assets[sk8r]["token_id"]
+        //console.log(play.assets[sk8r]["token_id"])
+        play.sk8r=play.assets[sk8r]["token_id"]
+        game.sk8r=play.sk8r
+        if(game.key){
+            location.hash=`game?${game.key}`
+        }else{
+            console.log("no game playing")
+            game.rival?play.startGame():location.hash=`challenge`
+        }
 
-        game.rival?play.startGame():location.hash=`challenge`
         
         //play.currentChallenge?play.currentChallenge.sk8r=play.assets[asset]["token_id"]:play.currentChallenge={sk8r:play.assets[asset]};
         
     },
     async challenge(to){
+        if(!to){
+            to=document.getElementById("addressSearch").value
+        }
+        to=to.toLowerCase()
+        if(to==window.ethereum.selectedAddress.toLowerCase()){
+            alert("cannot challenge self")
+            return
+        }
+        game={
+            rival:to,
+            startTime:Date.now()
+        }
 
-        game.rival=to
-        game.startTime=Date.now()
-
-        console.log(game.sk8r)
-        game.sk8r||game.sk8r==0?play.startGame():location.hash=`selectSk8r`
+        //console.log(game.sk8r)
+        game.sk8r||game.sk8r===0?play.startGame():location.hash=`selectSk8r`
 
     },
     async checkGame(){
@@ -102,22 +116,22 @@ let play={
             })
         });
         let ret= await r.text()
+        //console.trace(ret);
         if(ret=="No data available"){
             return 0
         }else{
-            return 
+            game=ret
+            console.log("game found", ret)
+            return 1
         }
     },
     async startGame(){
-        let gameData=await play.checkGame()
-            if(gameData==0){
-                let ret=await play.createGame()
-                game.key=ret.key
-            }else{
-                game.key=gameData
-            }
-            location.hash=`game?${game.key}`
-            lux.changePage()
+        
+        let ret=await play.createGame()
+        game.key=ret.key
+
+        location.hash=`game?${game.key}`
+        lux.changePage()
     },
     async createGame(){
         
@@ -136,6 +150,8 @@ let play={
         return ret
     },
     async playTrick(trick){
+        console.log(trick)
+        game.board=="flipped"?game.p2_sk8r=game.sk8r:game.p1_sk8r=game.sk8r
         game.lastTrick=trick
         //location.hash="loading"
         let gameSnip={
@@ -154,85 +170,151 @@ let play={
             })
         });
         let t=await r.text()
-        alert(t);
-        document.getElementById("p1_trick").innerHTML=trick.toUpperCase()
+        await alert(t);
+        document.getElementById("p1_status").innerHTML=trick.toUpperCase()
         play.changeAnimation(trick)
+        lux.changePage()
 
     },
-    changeAnimation(trick){
-        let zeros=5-game.sk8r.toString().length;
-        let zeroString="";
-        for(i=0;i<zeros;i++){
-            zeroString+="0"
+    changeAnimation(trick,p2){
+        console.log(p2);
+        if(p2?!game.p2_sk8r:!game.p1_sk8r){
+            p2?game.p2_sk8r=game.sk8r:game.p1_sk8r=game.sk8r
         }
-        console.log(trick)
-        document.getElementById("trickSource").src=`https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${game.sk8r}_v03/${game.sk8r}_${trick}_success.mov?alt=media`
-        document.getElementById("challenger").load();
-        document.getElementById("challenger").play();
+        let zeroString=play.getZeros(p2?game.p2_sk8r:game.p1_sk8r)
+        let trickSource="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media/"
+        if(!p2){
+            
+            if(game.p1_sk8r){
+                trickSource=trick?`https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${game.p1_sk8r}_v03/${game.p1_sk8r}_${game.p1_lastTrick?game.p1_lastTrick:"ollie"}_${game.p1_landed?"success":"fail"}.mov?alt=media`:`https://storage.googleapis.com/playsk8.appspot.com/pfp/${game.p1_sk8r}_pfp.png`
+            }
+        }else{
+            if(game.p2_sk8r){
+                trickSource=trick?`https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${game.p2_sk8r}_v03/${game.p2_sk8r}_${game.p2_lastTrick?game.p2_lastTrick:"ollie"}_${game.p2_landed?"success":"fail"}.mov?alt=media`:`https://storage.googleapis.com/playsk8.appspot.com/pfp/${game.p1_sk8r}_pfp.png`
+            }
+        }
+        if(game.board=="flipped"^p2){
+            document.getElementById("rivalTrickSource").src=trickSource
+            document.getElementById("rival").load();
+            document.getElementById("rival").play();
+            console.log(trickSource);
+        }else{
+            document.getElementById("trickSource").src=trickSource
+            document.getElementById("challenger").load();
+            document.getElementById("challenger").play();
+        }
     },
     getGameInfo(callback){
         
         if(game.key){
             let key=game.key
+            console.log(game)
             gamedata= firebase.database().ref('games/' + key);
-                gamedata.on('value', (snapshot) => {
-                    let gameSnap=snapshot.val();
-                    console.log(gameSnap)
+            setTimeout(()=>{
+                play.gameDataListener=gamedata.on('value', (snapshot) => {
                     
-                    //get start
-                    game=gameSnap
-                    game.key=key
-                    play.updateGame();
+                    if (snapshot.exists()) {
+                        let gameSnap=snapshot.val();
+                        console.log(gameSnap)
+                        
+
+                        let key=game.key
+                        // const sk8r=Number(`${play.sk8r}`)
+
+
+                        //console.log(gameSnap, sk8r)
+                        //get start
+                        game=gameSnap
+                        //console.log(gameSnap, sk8r)
+                        game.key=key
+                        game.sk8r=play.sk8r;
+                        //console.log(game,sk8r)
+                        play.updateGame();
+                    }else{
+                        console.log("Snapshot does not exist");
+                    }
                 });
+            },100);
         }else{
             play.startGame()
         }
     },
     async updateGame(){
+
+        //check if user is in game
+        game.playing=window.ethereum.selectedAddress.toLowerCase()==game.p1 || window.ethereum.selectedAddress.toLowerCase()==game.p2
+
+        if(game.winner){
+            document.getElementById("status").innerHTML=`Player ${game.winner} wins`
+        }
+        
         //check if user is p1 or p2
-        console.log(window.ethereum)
-        if(window.ethereum.selectedAddress.toLowerCase()==game.p1 || window.ethereum.selectedAddress.toLowerCase()==game.p2){
+        if(game.playing){
             //flip game board if user is p2
             window.ethereum.selectedAddress.toLowerCase()==game.p2?game.board="flipped":console.log("user is p1")
 
-            document.getElementById("playerAddress").innerHTML=`${game.board=="flipped"?game.p2.substring(0, 5):!game.p1.substring(0, 5)}...`;
-            document.getElementById("rivalAddress").innerHTML=`${game.board=="flipped"?game.p1.substring(0, 5):!game.p2.substring(0, 5)}...`;
-            
-            //check if user has selected sk8r yet
-            if(game.board=="flipped"?!game.p2_sk8r:!game.p1_sk8r){
-                //prompt user to select sk8r
-                alert("please select SK8R")
-                location.hash="sk8rSelect"
-                return
-            }else{
-                game.sk8r=game.board=="flipped"?game.p2_sk8r:game.p1_sk8r
-                game.lastTrick=game.board=="flipped"?!game.p2_lastTrick:!game.p1_lastTrick
-            }
+            //console.log(play.sk8r)
+            //delete game.sk8r
+            game.sk8r=play.sk8r;
 
-            play.changeAnimation(game.lastTrick)
-
+            // console.log(game.sk8r)
             //if its your turn
             if(game.board=="flipped"?game.turn==2:game.turn==1){
 
-                //getSk8rData
-                let r=await fetch(`/metadata/${game.sk8r}`, {
-                    method: 'GET' // *GET, POST, PUT, DELETE, etc.
-                })
-                
-                play.sk8rData=await r.json()
-    
+                //check if user has not selected sk8r yet
+                if(game.sk8r==undefined||game.sk8r=='undefined'||!game.sk8r){
+                    //prompt user to select sk8r
+                    alert("please select SK8R")
+                    location.hash="selectSk8r"
+                    return
+                }else{
+                    //game.sk8r=game.board=="flipped"?game.p2_sk8r:game.p1_sk8r
+                    game.lastTrick=game.board=="flipped"?game.p2_lastTrick:game.p1_lastTrick
+                }
+
                 //let trickSource=`https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${sk8r}_v03/${sk8r}_${Object.keys(play.sk8rData.tricks)[0]}_success.mov?alt=media`
     
                 //display tricks
-                document.getElementById('p1_tricks').innerHTML=elements.tricks()
+                document.getElementById('p1_tricks').innerHTML=await elements.tricks()
     
 
+            }
+            //if its not your turn
+            else{
+                document.getElementById("status").innerHTML="Waiting on opponent"
             }
         }
         //if user is not in game 
         else{
             //do nothing
         }
+
+        
+
+        //display last trick
+        let p1last=game.p1_lastTrick||"No trick played"
+        let p2last=game.p2_lastTrick||"No trick played"
+        document.getElementById("p1_status").innerHTML=game.board=="flipped"?p2last:p1last;
+        document.getElementById("p2_status").innerHTML=game.board=="flipped"?p1last:p2last;
+        play.changeAnimation(game.p1_lastTrick?game.p1_lastTrick:false)
+        play.changeAnimation(game.p2_lastTrick?game.p2_lastTrick:false,1)
+
+        for(i=1;i<=3;i++){
+            console.log(i, game.p1_score, game.p2_score)
+            if(game.board=="flipped"?game.p1_score>=i:game.p2_score>=i){
+                document.getElementById(`playerLetter${i}`).style="color:#ff7676"
+            }
+            if(game.board=="flipped"?game.p2_score>=i:game.p1_score>=i){
+                document.getElementById(`rivalLetter${i}`).style="color:#ff7676"
+            }
+        }
+
+        //display usernames and addresses
+        document.getElementById("playerAddress").innerHTML=`${game.board=="flipped"?game.p2.substring(0, 5):game.p1.substring(0, 5)}...`;
+        document.getElementById("rivalAddress").innerHTML=`${game.board=="flipped"?game.p1.substring(0, 5):game.p2.substring(0, 5)}...`;
+        document.getElementById("playerUsername").innerHTML=`${game.board=="flipped"?"Player 2":"Player 1"}`
+        document.getElementById("rivalUsername").innerHTML=`${game.board=="flipped"?"Player 1":"Player 2"}`
+
     }
 }
 

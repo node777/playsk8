@@ -18,7 +18,7 @@ router.get('/:asset?', (req, res)=>{
   for(i=0;i<zeros;i++){
     zeroString+="0"
   }
-  console.log(req.params.asset)
+  //console.log(req.params.asset)
   let asset= assets[req.params.asset];
   asset.img="https://storage.googleapis.com/playsk8.appspot.com/pfp/" + req.params.asset + "_pfp.png"
   asset["animation_url"]=`https://playsk8.wl.r.appspot.com/gallery/${req.params.asset}`

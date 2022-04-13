@@ -171,9 +171,9 @@ let elements={
         console.log(params)
 
         //load game data
-        game.key=params[1]
+        params[1]?game.key=params[1]:""
         await bitprint.load()
-        await play.getGameInfo()
+        play.getGameInfo()
 
         return `
             <div class="rounded" id="gameBox">
@@ -195,9 +195,9 @@ let elements={
                     <div class="player">
                         <div class="sk8r rounded">
                             <video  id="challenger" class="trickVideo left roundedTop" autoplay loop>
-                                    <source id="trickSource" type="video/mp4" src="">
+                                    <source id="trickSource" type="video/mp4" src="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media">
                             </video>
-                            <div class="trickInfo" id="p1_trick">
+                            <div class="trickInfo" id="p1_status">
                                 ${"Please select Trick"}
                             </div>
                             <img src="assets/bar.webp" class="statusBar" />
@@ -211,10 +211,10 @@ let elements={
                     <img src="assets/vs.gif" id="vs"/>
                     <div class="player">
                         <div class="sk8r rounded">
-                            <video class="trickVideo left roundedTop" autoplay loop>
-                                    <source id="enemyTrickSource" type="video/mp4" src="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media">
+                            <video id="rival" class="trickVideo left roundedTop" autoplay loop>
+                                    <source id="rivalTrickSource" type="video/mp4" src="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media">
                             </video>
-                            <div class="trickInfo" >
+                            <div class="trickInfo" id="p2_status">
                                 <!--
                                     SK8R:<br />
                                     Pending...<br><br>
@@ -225,16 +225,16 @@ let elements={
                             <img src="assets/bar.webp" class="statusBar" />
                         </div>
                         <div class="letters flex">
-                            <div id="enemyLetter1">S</div>
-                            <div id="enemyLetter1">K</div>
-                            <div id="enemyLetter1">8</div>
+                            <div id="rivalLetter1">S</div>
+                            <div id="rivalLetter2">K</div>
+                            <div id="rivalLetter3">8</div>
                         </div>
                     </div>
 
                     <div class="playerControls">
                         
                         <div class="left">
-                            <video class="circle" autoplay loop>
+                            <video id="rivalPfp" class="circle" autoplay loop>
                                     <source type="video/mp4" src="https://firebasestorage.googleapis.com/v0/b/playsk8.appspot.com/o/sk8_backlight_all3.mp4?alt=media">
                             </video>
                             <h3 id="rivalUsername">@bonezarmy</h3>
@@ -242,26 +242,51 @@ let elements={
                         </div>
                     </div>
                 </div>
+                <div id="status"></div>
             </div>
         `
     },
-    tricks(){
+    async tricks(){
         
-        let zeros=5-game.sk8r.toString().length;
-        let zeroString="";
-        for(i=0;i<zeros;i++){
-            zeroString+="0"
-        }
+        //getSk8rData
+        let r=await fetch(`/metadata/${game.sk8r}`, {
+            method: 'GET' // *GET, POST, PUT, DELETE, etc.
+        })
+        
+        play.sk8rData=await r.json()
+
+        let zeroString=play.getZeros(game.sk8r)
         let trickDisplay=""
-        for(trick in play.sk8rData.tricks){
-            trickDisplay+=`
-            <div class="pointer" onclick="play.playTrick('${trick}')">
-                
-                <video class="trickVideo left" onmouseover="play.changeAnimation('${trick}')" autoplay loop>
-                        <source id="" type="video/mp4" src="https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${game.sk8r}_v03/${game.sk8r}_${trick}_success.mov?alt=media">
-                </video>
-                ${trick.charAt(0).toUpperCase()}${trick.slice(1)}
-            </div>`
+
+        //if its your turn
+        if(game.board=="flipped"?game.turn==2:game.turn==1){
+            //if oopnent landed last trick AND you have not yet played their last trick
+            if(game.p1_lastTrick!=game.p2_lastTrick && (game.board=="flipped"?(game.p1_landed):(game.p2_landed))){
+                    let trick=game.board=="flipped"?game.p1_lastTrick:game.p2_lastTrick
+                    trickDisplay+=`
+                    <div class="pointer" onclick="play.playTrick('${trick}')">
+                        
+                        <video class="trickVideo left" onmouseover="play.changeAnimation('${trick}')" autoplay loop>
+                                <source id="" type="video/mp4" src="https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${game.sk8r}_v03/${game.sk8r}_${trick}_success.mov?alt=media">
+                        </video>
+                        ${trick.charAt(0).toUpperCase()}${trick.slice(1)}
+                    </div>`
+            }
+            //if user has all tricks availible
+            else{
+                for(trick in play.sk8rData.tricks){
+                    trickDisplay+=`
+                    <div class="pointer" onclick="play.playTrick('${trick}')">
+                        
+                        <video class="trickVideo left" onmouseover="play.changeAnimation('${trick}')" autoplay loop>
+                                <source id="" type="video/mp4" src="https://storage.googleapis.com/playsk8.appspot.com/v03_animations/${zeroString}${game.sk8r}_v03/${game.sk8r}_${trick}_success.mov?alt=media">
+                        </video>
+                        ${trick.charAt(0).toUpperCase()}${trick.slice(1)}
+                    </div>`
+                }
+            }
+        }else{
+
         }
         return trickDisplay
     },
@@ -274,14 +299,14 @@ let elements={
                 losses:12
             },
             {
-                address:"0x360ADe0A8b3238d1a25EcA37aB1Cd2270F0AD3B3",
+                address:"0x777eC7f93a9A688e8a030c0F78FC17eb94a14777",
                 wins:10,
                 losses:11
             },
             {
-                address:"0x360ADe0A8b3238d1a25EcA37aB1Cd2270F0AD3B3",
-                wins:10,
-                losses:11
+                address:"0x45fd94ffc5f38f61ff50e4ee134e2c87924ab6e1",
+                wins:9,
+                losses:10
             }
         ]
         let topPlayers=``
@@ -318,6 +343,10 @@ let elements={
         <div class="box">
             <img src="assets/challengePlayers.webp" />
             <img id="leaderboardGif" src="assets/leaderboard.gif" />
+            <div class="searchBox">
+                <input id="addressSearch" placeholder="Search for Player"></input>
+                <div onclick="play.challenge()" class=" button">Challenge</div>
+            </div>
             <div id="leaderboard">
                 <div class="flex">
                 
@@ -388,31 +417,31 @@ let elements={
             for(add in data){
                 for(g in data[add]){
                     gamedata= firebase.database().ref('games/' + g);
-                    gamedata.on('value', (snapshot2) => {
+                    play.gameHistoryListener=gamedata.on('value', (snapshot2) => {
                         let gameSnap=snapshot2.val();
                         console.log(gameSnap)
                         
                         //get start
-                        start=new Date(gameSnap.startTime)
+                        start=new Date(gameSnap.start)
                         console.log(start)
                         document.getElementById("playerGames")?document.getElementById("playerGames").innerHTML+= `
                             <div class="br"></div>
                             <div onclick="location.hash='game?${g}'" class="flex vCenter">
                             
                                 <div>    
-                                    0x${gameSnap.challenger[2]}${gameSnap.challenger[3]}${gameSnap.challenger[4]}${gameSnap.challenger[5]}...      
+                                    0x${gameSnap.p1[2]}${gameSnap.p1[3]}${gameSnap.p1[4]}${gameSnap.p1[5]}...      
                                 </div>
                                 <div>    
-                                    0x${gameSnap.rival[2]}${gameSnap.rival[3]}${gameSnap.rival[4]}${gameSnap.rival[5]}...
+                                    0x${gameSnap.p2[2]}${gameSnap.p2[3]}${gameSnap.p2[4]}${gameSnap.p2[5]}...
                                 </div>
                                 <div>
-                                    ${gameSnap.sk8r||"Not selected"}
+                                    ${gameSnap.p1_sk8r||"Not selected"}
                                 </div>
                                 <div>
-                                    ${gameSnap.sk8r||"Not selected"}
+                                    ${gameSnap.p2_sk8r||"Not selected"}
                                 </div>
                                 <div>
-                                    0-0
+                                ${gameSnap.p1_score}-${gameSnap.p2_score}
                                 </div>
                                 <div>
                                     ${start.toLocaleDateString()}

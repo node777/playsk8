@@ -9,8 +9,14 @@ body{
     overflow-x: hidden;    
 }
 input{
-    font-size: 32px;
+    font-size: 16px;
+    padding: 16px;
     font-family: 'Play', sans-serif;
+    background-color: #222;
+    color: white;
+    border-radius: 16px;
+    margin: 16px;
+
 }
 iframe{
     border: none;
@@ -54,6 +60,7 @@ iframe{
     background-size: 100%;
     border: 1px solid white;
     padding: 32px;
+    user-select: none;
 }
 #gameHead{
     width: 100%;
@@ -80,6 +87,15 @@ iframe{
     top:0;
     right: 0;
     width: 30%;
+}
+#rival,#rivalPfp{
+    transform: scaleX(-1);
+}
+#addressSearch{
+    width: 70%;
+}
+.searchBox>*{
+    display: inline-block;
 }
 .red{
     color:#fe8181;
@@ -283,10 +299,16 @@ iframe{
     display: inline-block;
     margin: 32px;
 }
-.topPad{
+.topBottomPad{
     padding-top: 5vw;
+    padding-bottom: 5vw;
 }
 .sk8r>*{
+}
+#status{
+    background-color: #01000144;
+    padding: 4px;
+    text-align: center;
 }
 .sk8rInfo{
     background-color: #422362;
